@@ -7,7 +7,7 @@ module.exports = {
     context: __dirname,
     entry: './index',
     output: {
-        path: path.join(__dirname, '../dist/client'),
+        path: path.join(__dirname, '..'),
         filename: 'main.js'
     },
 
@@ -46,12 +46,12 @@ module.exports = {
         new CopyPlugin([
             {
                 from: 'index.html',
-                to: path.join(__dirname, '../dist/client'),
+                to: path.join(__dirname, '..'),
             },
-            {
-                from: 'images',
-                to: path.join(__dirname, '../dist/client/images'),
-            }
+            // {
+            //     from: 'images',
+            //     to: path.join(__dirname, '../docs/images'),
+            // }
         ])
     ]
 };
