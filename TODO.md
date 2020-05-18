@@ -4,6 +4,7 @@
 - [ ] add venmo button?
 - [ ] add timer
 
+- [x] show local stream video/audio
 - [x] remove video when track stops (currently just frozen)
 - [x] close chat in chat header
 - [x] chat number indicator for unread chats

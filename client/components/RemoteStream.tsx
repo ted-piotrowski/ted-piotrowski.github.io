@@ -7,7 +7,7 @@ const RemoteStream = () => {
     const videoRef = useRef(null);
 
     useEffect(() => {
-        link.on('track', (track: MediaStreamTrack) => {
+        const listener = (track: MediaStreamTrack) => {
             console.log('add track', track);
             if (track.kind === 'video' && videoRef && videoRef.current) {
                 const video = videoRef.current;
@@ -33,7 +33,11 @@ const RemoteStream = () => {
                 }
                 audio.play()
             }
-        });
+        }
+        link.on('track', listener);
+        return () => {
+            link.removeListener('track', listener);
+        }
     }, [link]);
 
     return (

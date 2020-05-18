@@ -13,7 +13,7 @@ const Chat = () => {
     useEffect(() => {
         link.on('data', (data) => { addResponseMessage(data.toString()) })
         const name = room.join('###').replace(me, '').replace('###', '');
-        addResponseMessage(`Connected successfully. Send a message to **${name}** here or enable the microphone to speak.`);
+        addResponseMessage(`Welcome! Type here to send me a message...`);
     }, [link])
 
     const handleNewUserMessage = (message) => {

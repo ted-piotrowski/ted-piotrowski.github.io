@@ -8,7 +8,13 @@ import socketio from 'socket.io';
 
 const app = express();
 const http = new Server(app);
-const io = socketio(http);
+
+const httpsServer = https.createServer({
+  key: fs.readFileSync('/etc/letsencrypt/live/sacalerts.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/sacalerts.com/fullchain.pem'),
+}, app);
+
+const io = socketio(httpsServer);
 const port = process.env.PORT || 3001;
 
 const getRoomSockets = (roomName: string) => {
@@ -83,11 +89,6 @@ io.on('connection', function (socket) {
 http.listen(port, function () {
   console.log('listening on *:' + port);
 });
-
-const httpsServer = https.createServer({
-  key: fs.readFileSync('/etc/letsencrypt/live/sacalerts.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/sacalerts.com/fullchain.pem'),
-}, app);
 
 httpsServer.listen(3000, function () {
   console.log('https listening on *:' + 3000);

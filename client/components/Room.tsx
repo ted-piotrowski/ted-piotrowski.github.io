@@ -6,6 +6,7 @@ import { LinkContext } from './Connection';
 import MicrophoneIcon from './icons/MicrophoneIcon';
 import ScreenIcon from './icons/ScreenIcon';
 import VideoIcon from './icons/VideoIcon';
+import LocalStream from './LocalStream';
 import RemoteStream from './RemoteStream';
 
 const Room = () => {
@@ -13,6 +14,8 @@ const Room = () => {
     const [audio, setAudio] = useState(false);
     const [video, setVideo] = useState(false);
     const [screen, setScreen] = useState(false);
+    const [videoTrack, setVideoTrack] = useState<MediaStreamTrack>(null);
+    const [audioTrack, setAudioTrack] = useState<MediaStreamTrack>(null);
     const [rtcStream, setRtcStream] = useState(new MediaStream());
     const link = useContext(LinkContext);
 
@@ -25,6 +28,7 @@ const Room = () => {
                 setAudio(true);
                 stream.getTracks().map(track => {
                     rtcStream.addTrack(track);
+                    setAudioTrack(track);
                     link.addTrack(track, rtcStream);
                 });
                 console.log('add track', rtcStream.getTracks())
@@ -35,6 +39,7 @@ const Room = () => {
             console.log('stop track', rtcStream.getTracks())
             rtcStream.getAudioTracks().map(track => {
                 link.removeTrack(track, rtcStream)
+                setAudioTrack(null);
                 track.stop();
             });
             setAudio(false);
@@ -53,6 +58,7 @@ const Room = () => {
                 setVideo(true);
                 stream.getTracks().map(track => {
                     rtcStream.addTrack(track);
+                    setVideoTrack(track);
                     link.addTrack(track, rtcStream);
                 });
             } catch (e) {
@@ -61,6 +67,7 @@ const Room = () => {
         } else {
             rtcStream.getVideoTracks().map(track => {
                 link.removeTrack(track, rtcStream)
+                setVideoTrack(null);
                 track.stop();
             });
             setVideo(false);
@@ -70,7 +77,7 @@ const Room = () => {
     const toggleScreen = async () => {
         if (!screen) {
             try {
-                const stream = await (navigator.mediaDevices as any).getDisplayMedia({
+                const stream: MediaStream = await (navigator.mediaDevices as any).getDisplayMedia({
                     video: true
                 });
                 if (video) {
@@ -79,6 +86,7 @@ const Room = () => {
                 setScreen(true);
                 stream.getTracks().map(track => {
                     rtcStream.addTrack(track);
+                    setVideoTrack(track);
                     link.addTrack(track, rtcStream);
                 });
             } catch (e) {
@@ -87,6 +95,7 @@ const Room = () => {
         } else {
             rtcStream.getVideoTracks().map(track => {
                 link.removeTrack(track, rtcStream)
+                setVideoTrack(null);
                 track.stop();
             });
             setScreen(false);
@@ -95,8 +104,8 @@ const Room = () => {
 
     return (
         <div style={styles.container}>
-            {/* <LocalStream /> */}
-            <div style={{ flexGrow: 1 }}>
+            <div style={{ position: 'relative', flexGrow: 1 }}>
+                <LocalStream videoTrack={videoTrack} audioTrack={audioTrack} />
                 <RemoteStream />
             </div>
             <div>
