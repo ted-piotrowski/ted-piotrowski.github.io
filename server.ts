@@ -1,13 +1,15 @@
 import compression from 'compression';
 import express from 'express';
+import fs from 'fs';
 import { Server } from 'http';
+import https from 'https';
 import path from 'path';
 import socketio from 'socket.io';
 
 const app = express();
 const http = new Server(app);
 const io = socketio(http);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const getRoomSockets = (roomName: string) => {
   const participants = [];
@@ -80,4 +82,13 @@ io.on('connection', function (socket) {
 
 http.listen(port, function () {
   console.log('listening on *:' + port);
+});
+
+const httpsServer = https.createServer({
+  key: fs.readFileSync('/etc/letsencrypt/live/sacalerts.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/sacalerts.com/fullchain.pem'),
+}, app);
+
+httpsServer.listen(3000, function () {
+  console.log('https listening on *:' + 3000);
 });

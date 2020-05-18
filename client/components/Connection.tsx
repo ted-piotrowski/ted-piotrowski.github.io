@@ -33,7 +33,7 @@ function createLink(data: CreateLinkData) {
 export const LinkContext = React.createContext<SimplePeer.Instance | null>(null);
 export const RoomContext = React.createContext<string[]>([]);
 
-const socket = io('http://sacalerts.com:3000', { upgrade: false, transports: ['websocket'] });
+const socket = io('wss://sacalerts.com:3000', { upgrade: false, transports: ['websocket'] });
 
 const Connection = () => {
     const [users, setUsers] = useState([]);
