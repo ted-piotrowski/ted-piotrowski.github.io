@@ -17,7 +17,7 @@ const RemoteStream = () => {
                     track.addEventListener('mute', () => { video.srcObject = null })
                 } else {
                     video.src = window.URL.createObjectURL(videoStream) // for older browsers
-                    track.addEventListener('mute', () => { video.src = null })
+                    track.addEventListener('mute', () => { console.log('Track muted', track); video.src = null })
                 }
                 video.play()
             }
@@ -29,7 +29,7 @@ const RemoteStream = () => {
                     track.addEventListener('mute', () => { audio.srcObject = null })
                 } else {
                     audio.src = window.URL.createObjectURL(audioStream) // for older browsers
-                    track.addEventListener('mute', () => { audio.src = null })
+                    track.addEventListener('mute', () => { console.log('Track muted', track); audio.src = null })
                 }
                 audio.play()
             }

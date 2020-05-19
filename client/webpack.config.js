@@ -48,6 +48,10 @@ module.exports = {
                 from: 'index.html',
                 to: path.join(__dirname, '..'),
             },
+            {
+                from: 'index.html',
+                to: path.join(__dirname, '../404.html'),
+            },
             // {
             //     from: 'images',
             //     to: path.join(__dirname, '../docs/images'),

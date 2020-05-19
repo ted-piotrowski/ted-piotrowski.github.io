@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // import 'react-chat-widget/lib/styles.css';
 import SimplePeer from 'simple-peer';
-import io from 'socket.io-client';
 import { getRoomName, getUsername } from '../utils/helpers';
 import { Color } from '../utils/styles';
 import Room from './Room';
@@ -33,9 +32,12 @@ function createLink(data: CreateLinkData) {
 export const LinkContext = React.createContext<SimplePeer.Instance | null>(null);
 export const RoomContext = React.createContext<string[]>([]);
 
-const socket = io('wss://sacalerts.com:3000', { upgrade: false, transports: ['websocket'] });
+interface Props {
+    socket: SocketIOClient.Socket;
+}
 
-const Connection = () => {
+const Connection = (props: Props) => {
+    const { socket } = props;
     const [users, setUsers] = useState([]);
     const [link, setLink] = useState<SimplePeer.Instance | null>(null);
 
