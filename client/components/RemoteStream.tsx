@@ -3,8 +3,8 @@ import { LinkContext } from './Connection';
 
 const RemoteStream = () => {
     const link = useContext(LinkContext);
-    const audioRef = useRef(null);
-    const videoRef = useRef(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
         const listener = (track: MediaStreamTrack) => {
@@ -12,25 +12,30 @@ const RemoteStream = () => {
             if (track.kind === 'video' && videoRef && videoRef.current) {
                 const video = videoRef.current;
                 const videoStream = new MediaStream([track]);
-                if ('srcObject' in video) {
-                    video.srcObject = videoStream;
-                    track.addEventListener('mute', () => { video.srcObject = null })
-                } else {
-                    video.src = window.URL.createObjectURL(videoStream) // for older browsers
-                    track.addEventListener('mute', () => { console.log('Track muted', track); video.src = null })
-                }
+                video.style.display = 'block';
+                video.srcObject = videoStream;
+                track.addEventListener('mute', () => {
+                    console.log('Track muted', track);
+                    video.style.display = 'none';
+                });
+                track.addEventListener('unmute', () => {
+                    console.log('Track unmuted', track);
+                    video.style.display = 'block';
+                });
+                track.addEventListener('ended', () => {
+                    console.log('Track ended', track);
+                    video.srcObject = null
+                });
                 video.play()
             }
             if (track.kind === 'audio' && audioRef && audioRef.current) {
                 const audio = audioRef.current;
                 const audioStream = new MediaStream([track]);
-                if ('srcObject' in audio) {
-                    audio.srcObject = audioStream;
-                    track.addEventListener('mute', () => { audio.srcObject = null })
-                } else {
-                    audio.src = window.URL.createObjectURL(audioStream) // for older browsers
-                    track.addEventListener('mute', () => { console.log('Track muted', track); audio.src = null })
-                }
+                audio.srcObject = audioStream;
+                track.addEventListener('ended', () => {
+                    console.log('Track ended', track);
+                    audio.srcObject = null
+                })
                 audio.play()
             }
         }
