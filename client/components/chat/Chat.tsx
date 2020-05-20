@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { addResponseMessage, toggleMsgLoader, Widget } from 'react-chat-widget';
 import '../../css/chat.css';
 import { DataType } from '../../types/chat';
+import { playSound } from '../../utils/helpers';
 import { LinkContext, RoomContext } from '../Connection';
 
 const Chat = () => {
@@ -16,6 +17,7 @@ const Chat = () => {
             try {
                 const data = JSON.parse(incoming.toString());
                 if (data.type === DataType.CHAT) {
+                    playSound();
                     addResponseMessage(data.payload);
                     if (typing) {
                         toggleMsgLoader();
