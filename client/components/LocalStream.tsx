@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { getUsername } from '../utils/helpers';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Color } from '../utils/styles';
+import { RoomContext } from './Connection';
 
 interface Props {
     audioTrack: MediaStreamTrack;
@@ -9,6 +9,7 @@ interface Props {
 
 const LocalStream = (props: Props) => {
     const { audioTrack, videoTrack } = props;
+    const room = useContext(RoomContext);
     const [amplitude, setAmplitude] = useState(0);
     const audioRef = useRef(null);
     const videoRef = useRef(null);
@@ -49,7 +50,7 @@ const LocalStream = (props: Props) => {
                 <div style={{ opacity: 0.3, borderRadius: '100%', height: amplitude, width: amplitude, backgroundColor: Color.RED }}></div>
             </div>
             <div style={styles.avatar}>
-                <div>{getUsername()[0]}</div>
+                <div>{room[0] && room[0][0]}</div>
             </div>
             <div style={{ position: 'absolute', zIndex: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 {videoTrack && <video ref={videoRef} height={150} width={200} />}

@@ -1,32 +1,71 @@
-import React, { useContext, useEffect } from 'react';
-import { addResponseMessage, Widget } from 'react-chat-widget';
+import React, { useContext, useEffect, useState } from 'react';
+import { addResponseMessage, toggleMsgLoader, Widget } from 'react-chat-widget';
 import '../../css/chat.css';
-import { getUsername } from '../../utils/helpers';
+import { DataType } from '../../types/chat';
 import { LinkContext, RoomContext } from '../Connection';
 
 const Chat = () => {
     const link = useContext(LinkContext);
     const room = useContext(RoomContext);
-
-    const me = getUsername();
+    const [typing, setTyping] = useState(false);
 
     useEffect(() => {
-        link.on('data', (data) => { addResponseMessage(data.toString()) })
-        const name = room.join('###').replace(me, '').replace('###', '');
-        addResponseMessage(`Welcome! Type here to send me a message...`);
+        let timeout;
+        let typing = false;
+        const onData = (incoming) => {
+            try {
+                const data = JSON.parse(incoming.toString());
+                if (data.type === DataType.CHAT) {
+                    addResponseMessage(data.payload);
+                    if (typing) {
+                        toggleMsgLoader();
+                        typing = false;
+                    }
+                } else if (data.type === DataType.TYPING_IN_CHAT) {
+                    if (!typing) {
+                        console.log('toggle msg load')
+                        toggleMsgLoader();
+                    }
+                    typing = true;
+                    window.clearTimeout(timeout);
+                    timeout = window.setTimeout(() => {
+                        if (typing) {
+                            toggleMsgLoader();
+                            typing = false;
+                        }
+                    }, 2000)
+                }
+            } catch (e) { }
+        }
+        if (link) {
+            link.on('data', onData)
+            addResponseMessage(`Connected! Type here to send me a message...`);
+        }
+        return () => {
+            if (link) {
+                link.removeListener('data', onData);
+            }
+        }
     }, [link])
 
-    const handleNewUserMessage = (message) => {
-        link.send(message);
+    const handleNewUserMessage = (message: string) => {
+        link.send(JSON.stringify({ type: DataType.CHAT, payload: message }));
+    }
+
+    const indicateTyping = () => {
+        if (link) {
+            link.send(JSON.stringify({ type: DataType.TYPING_IN_CHAT }));
+        }
     }
 
     return (
         <Widget
             handleNewUserMessage={handleNewUserMessage}
-            title='Chat'
+            title={`Chat with ${room.length === 2 ? room[1] : ''}`}
             subtitle=''
             fullScreenMode={true}
             launcher={(open) => null}
+            handleTextInputChange={indicateTyping}
         />
     );
 }

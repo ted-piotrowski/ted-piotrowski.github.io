@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { isWidgetOpened, toggleWidget } from 'react-chat-widget';
+import { DataType } from '../../types/chat';
 import { Color } from '../../utils/styles';
 import { LinkContext } from '../Connection';
 import ChatIcon from '../icons/ChatIcon';
@@ -13,11 +14,22 @@ const ChatButton = () => {
         if (!isWidgetOpened()) {
             toggleWidget();
         }
-        link.on('data', () => {
-            if (!isWidgetOpened()) {
-                setUnread(unread => unread + 1);
+        const onData = (incoming) => {
+            try {
+                const data = JSON.parse(incoming.toString());
+                if (data.type === DataType.CHAT && !isWidgetOpened()) {
+                    setUnread(unread => unread + 1);
+                }
+            } catch (e) { }
+        }
+        if (link) {
+            link.on('data', onData);
+        }
+        return () => {
+            if (link) {
+                link.removeListener('data', onData)
             }
-        })
+        }
     }, [link]);
 
     const toggleChat = () => {

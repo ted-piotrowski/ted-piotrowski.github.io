@@ -40,6 +40,16 @@ io.on('connection', function (socket) {
     (socket as any).username = username;
     (socket as any).roomName = roomName;
 
+    // name update
+    if (getRoomSockets(roomName).find(s => s.id === socket.id)) {
+      console.log(`Updating name to ${username}`)
+      const participants = getRoomSockets(roomName).map(socket => socket.username)
+      getRoomSockets(roomName).forEach(socket => {
+        io.to(socket.id).emit('roomUpdated', participants, socket.username);
+      })
+      return;
+    }
+
     const room = io.sockets.adapter.rooms[roomName];
     if (room && room.length === 2) {
       console.log(`${roomName} is full`)
@@ -61,7 +71,9 @@ io.on('connection', function (socket) {
 
     const participants = getRoomSockets(roomName).map(socket => socket.username)
     console.log('emitting roomUpdated', participants)
-    io.to(roomName).emit('roomUpdated', participants);
+    getRoomSockets(roomName).forEach(socket => {
+      io.to(socket.id).emit('roomUpdated', participants, socket.username);
+    })
     if (room && room.length === 2) {
       io.to(socket.id).emit('initialize');
     }
@@ -72,7 +84,9 @@ io.on('connection', function (socket) {
     console.log(`${username} leaving ${roomName}`);
     const participants = getRoomSockets(roomName).map(socket => socket.username)
     console.log('emitting roomUpdated', participants)
-    io.to(roomName).emit('roomUpdated', participants);
+    getRoomSockets(roomName).forEach(socket => {
+      io.to(socket.id).emit('roomUpdated', participants, socket.username);
+    })
   });
 
   socket.on('signal', function (msg) {

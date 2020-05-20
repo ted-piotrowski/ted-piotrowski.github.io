@@ -57,5 +57,11 @@ module.exports = {
             //     to: path.join(__dirname, '../docs/images'),
             // }
         ])
-    ]
+    ],
+
+    devServer: {
+        contentBase: path.join(__dirname, '..'),
+        // compress: true,
+        port: 3000
+    }
 };

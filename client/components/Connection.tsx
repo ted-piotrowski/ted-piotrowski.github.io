@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 // import 'react-chat-widget/lib/styles.css';
 import SimplePeer from 'simple-peer';
-import { getRoomName, getUsername } from '../utils/helpers';
-import { Color } from '../utils/styles';
+import io from 'socket.io-client';
+import { getDefaultUsername, getRoomName } from '../utils/helpers';
 import Room from './Room';
+import Welcome from './Welcome';
+
+const socket = io('wss://sacalerts.com:3000', { upgrade: false, transports: ['websocket'] });
 
 interface CreateLinkData {
     socket: SocketIOClient.Socket,
@@ -21,7 +24,6 @@ function createLink(data: CreateLinkData) {
         socket.emit('signal', JSON.stringify(data));
     })
 
-
     p.on('connect', () => {
         console.log('CALL CONNECTED')
     })
@@ -31,23 +33,21 @@ function createLink(data: CreateLinkData) {
 
 export const LinkContext = React.createContext<SimplePeer.Instance | null>(null);
 export const RoomContext = React.createContext<string[]>([]);
+export const SocketContext = React.createContext<SocketIOClient.Socket>(socket);
 
-interface Props {
-    socket: SocketIOClient.Socket;
-}
-
-const Connection = (props: Props) => {
-    const { socket } = props;
+const Connection = () => {
     const [users, setUsers] = useState([]);
     const [link, setLink] = useState<SimplePeer.Instance | null>(null);
 
     useEffect(() => {
         const room = getRoomName();
-
-        const me = getUsername();
+        const me = getDefaultUsername();
         socket.emit('enter', room, me);
 
-        socket.on('roomUpdated', setUsers);
+        socket.on('roomUpdated', (users: string[], me: string) => {
+            // convention is for local user to always come first
+            setUsers([me, ...users.filter(user => user !== me)]);
+        });
 
         socket.on('initialize', () => {
             console.log('creating initiating link');
@@ -82,41 +82,16 @@ const Connection = (props: Props) => {
         }
     }, [link]);
 
-    if (!link) {
-        return (
-            <div style={styles.loading}>
-                <div style={{ padding: 40, backgroundColor: Color.BLUE2, borderRadius: 5, }}>
-                    <p style={{ fontSize: 24 }}>
-                        What would you like to be called?
-                    </p>
-                    <p style={{ textAlign: 'center' }}>
-                        <input style={{ backgroundColor: Color.BLUE4, padding: 10, width: '80%', textAlign: 'center', fontSize: 20, border: `1px solid ${Color.BLUE3}` }} />
-                    </p>
-                </div>
-            </div>
-
-        )
-    }
-
     return (
-        <LinkContext.Provider value={link}>
-            <RoomContext.Provider value={users}>
-                <Room />
-            </RoomContext.Provider>
-        </LinkContext.Provider>
+        <SocketContext.Provider value={socket}>
+            <LinkContext.Provider value={link}>
+                <RoomContext.Provider value={users}>
+                    <Room />
+                    <Welcome />
+                </RoomContext.Provider>
+            </LinkContext.Provider>
+        </SocketContext.Provider >
     )
-}
-
-const styles = {
-    loading: {
-        display: 'flex',
-        height: '100vh',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: Color.BLUE1,
-        backgroundSize: '100%',
-        backgroundPosition: 'center',
-    }
 }
 
 export default Connection;

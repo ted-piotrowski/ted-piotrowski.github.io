@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { DataType } from '../types/chat';
 import { Color } from '../utils/styles';
 import Chat from './chat/Chat';
 import ChatButton from './chat/ChatButton';
@@ -67,6 +68,7 @@ const Room = () => {
         } else {
             rtcStream.getVideoTracks().map(track => {
                 link.removeTrack(track, rtcStream)
+                link.send(JSON.stringify({ type: DataType.VIDEO_TRACK_ENDED }))
                 setVideoTrack(null);
                 track.stop();
             });
@@ -95,6 +97,7 @@ const Room = () => {
         } else {
             rtcStream.getVideoTracks().map(track => {
                 link.removeTrack(track, rtcStream)
+                link.send(JSON.stringify({ type: DataType.VIDEO_TRACK_ENDED }))
                 setVideoTrack(null);
                 track.stop();
             });

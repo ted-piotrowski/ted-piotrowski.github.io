@@ -151,7 +151,7 @@
 }
 
 .loader-container {
-    background-color: #dee7e6;
+    background-color: #7ba6b7;
     border-radius: 10px;
     padding: 15px;
     max-width: 215px;
@@ -163,7 +163,7 @@
     height: 4px;
     width: 4px;
     border-radius: 50%;
-    background: gray;
+    background: #dee7e6;
     margin-right: 2px;
     animation: a .5s ease infinite alternate
 }
