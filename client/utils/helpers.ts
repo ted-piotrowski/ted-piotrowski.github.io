@@ -7,7 +7,7 @@ export const getRoomName = () => {
 export const getDefaultUsername = () => {
     let username = window.sessionStorage.getItem('username');
     if (username === null) {
-        username = `guest${Math.ceil(Math.random() * 999)}`;
+        username = generateWords(2);
         window.sessionStorage.setItem('username', username);
     }
     return username;
@@ -22,7 +22,7 @@ export const playSound = () => {
     audio.play();
 }
 
-export const generatePath = (n: number) => {
+export const generateWords = (n: number) => {
     const words = [];
     for (let i = 0; i < n; i++) {
         words.push(seedWords[Math.ceil(Math.random() * seedWords.length)]);
