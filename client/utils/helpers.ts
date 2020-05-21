@@ -7,7 +7,7 @@ export const getRoomName = () => {
 export const getDefaultUsername = () => {
     let username = window.sessionStorage.getItem('username');
     if (username === null) {
-        username = generateWords(2);
+        username = `guest${Math.ceil(Math.random() * 999)}`;
         window.sessionStorage.setItem('username', username);
     }
     return username;
