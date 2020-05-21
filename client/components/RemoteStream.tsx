@@ -40,6 +40,11 @@ const RemoteStream = () => {
         if (link) {
             link.on('data', removeTrack);
             link.on('track', addTrack);
+        } else {
+            if (videoRef && videoRef.current) {
+                const video = videoRef.current;
+                video.style.display = 'none';
+            }
         }
         return () => {
             if (link) {

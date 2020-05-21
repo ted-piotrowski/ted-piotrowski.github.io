@@ -45,6 +45,12 @@ const Connection = () => {
         socket.emit('enter', room, me);
 
         socket.on('roomUpdated', (users: string[], me: string) => {
+            if (users.length !== 2) {
+                try {
+                    setLink(null);
+                    link && link.destroy();
+                } catch (e) { }
+            }
             // convention is for local user to always come first
             setUsers([me, ...users.filter(user => user !== me)]);
         });
@@ -53,9 +59,11 @@ const Connection = () => {
             console.log('creating initiating link');
             const link = createLink({ socket, initiator: true });
             link.on('error', (err) => {
-                console.log('ERROR destroying link', err);
-                link.destroy();
-                setLink(null);
+                try {
+                    console.log('ERROR destroying link', err);
+                    setLink(null);
+                    link.destroy();
+                } catch (e) { }
             });
             setLink(link);
         });
@@ -66,9 +74,11 @@ const Connection = () => {
                 const link = createLink({ socket, initiator: false });
                 link.signal(sdp);
                 link.on('error', (err) => {
-                    console.log(err);
-                    link.destroy();
-                    setLink(null);
+                    try {
+                        console.log(err);
+                        setLink(null);
+                        link.destroy();
+                    } catch (e) { }
                 });
                 setLink(link);
             } else {

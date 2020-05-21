@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { DataType } from '../types/chat';
 import { Color } from '../utils/styles';
 import Chat from './chat/Chat';
@@ -20,7 +20,24 @@ const Room = () => {
     const [rtcStream, setRtcStream] = useState(new MediaStream());
     const link = useContext(LinkContext);
 
+    useEffect(() => {
+        setAudio(false);
+        setVideo(false);
+        setScreen(false);
+        audioTrack && audioTrack.stop();
+        setAudioTrack(null);
+        videoTrack && videoTrack.stop();
+        setVideoTrack(null);
+        rtcStream.getTracks().map(track => {
+            track.stop();
+        })
+        setRtcStream(new MediaStream());
+    }, [link])
+
     const toggleAudio = async () => {
+        if (!link) {
+            return;
+        }
         if (!audio) {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
@@ -48,6 +65,9 @@ const Room = () => {
     }
 
     const toggleVideo = async () => {
+        if (!link) {
+            return;
+        }
         if (!video) {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
@@ -77,6 +97,9 @@ const Room = () => {
     }
 
     const toggleScreen = async () => {
+        if (!link) {
+            return;
+        }
         if (!screen) {
             try {
                 const stream: MediaStream = await (navigator.mediaDevices as any).getDisplayMedia({

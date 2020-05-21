@@ -40,8 +40,11 @@ const Chat = () => {
             } catch (e) { }
         }
         if (link) {
+            (document.querySelector('.rcw-send') as HTMLButtonElement).disabled = false;
             link.on('data', onData)
             addResponseMessage(`Connected! Type here to send me a message...`);
+        } else {
+            (document.querySelector('.rcw-send') as HTMLButtonElement).disabled = true;
         }
         return () => {
             if (link) {
@@ -51,7 +54,9 @@ const Chat = () => {
     }, [link])
 
     const handleNewUserMessage = (message: string) => {
-        link.send(JSON.stringify({ type: DataType.CHAT, payload: message }));
+        if (link) {
+            link.send(JSON.stringify({ type: DataType.CHAT, payload: message }));
+        }
     }
 
     const indicateTyping = () => {
@@ -60,10 +65,11 @@ const Chat = () => {
         }
     }
 
+    const title = room.length === 2 ? `Chat with ${room[1]}` : 'Waiting for someone to join...'
     return (
         <Widget
             handleNewUserMessage={handleNewUserMessage}
-            title={`Chat with ${room.length === 2 ? room[1] : ''}`}
+            title={title}
             subtitle=''
             fullScreenMode={true}
             launcher={(open) => null}
