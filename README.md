@@ -1,13 +1,16 @@
-# chat-example
+![We love the moon, cause it is good to us...](https://image.flaticon.com/icons/svg/2909/2909605.svg)
 
-This is the source code for a very simple chat example used for
-the [Getting Started](http://socket.io/get-started/chat/) guide
-of the Socket.IO website.
+# Moonlite
 
-Please refer to it to learn how to run this application.
+> Moonlight (verb): have a second job in addition to one's regular employment
 
-You can also spin up a free Heroku dyno to test it out:
+Moonline is a free and fast way to work remotely with anyone in the world. Features include:
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/socketio/chat-example)
+- Chat
+- Audio, video, and screensharing
+- 2 person room limit (no Zoom bombs)
+- Simple room urls: [moonlite.live/hello-world](https://moonlite.live/hello-world)
 
-Besides, the application is deployed on [Now](https://zeit.co/now): https://socketio-chat-example.now.sh/
+Live demo:
+
+[moonlite.live](https://moonlite.live)
