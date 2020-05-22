@@ -1,4 +1,4 @@
 #!/bin/bash
 
-scp server.ts package.json sacalerts:~/vidmo
-ssh -t sacalerts 'cd ~/vidmo && ./update.sh'
+scp server.ts package.json sacalerts:~/moonlite
+ssh -t sacalerts 'cd ~/moonlite && ./update.sh'

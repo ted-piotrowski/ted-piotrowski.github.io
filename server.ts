@@ -36,7 +36,7 @@ app.get('*', function (req, res) {
 
 io.on('connection', function (socket) {
   socket.on('enter', async function (roomName, username) {
-    console.log(`${username} entering ${roomName} with ${socket.id} socket`);
+    console.log(`${new Date()}: ${username} entering ${roomName} with ${socket.id} socket`);
     (socket as any).username = username;
     (socket as any).roomName = roomName;
 
@@ -81,7 +81,7 @@ io.on('connection', function (socket) {
 
   socket.on('disconnect', function () {
     const { username, roomName } = socket as any;
-    console.log(`${username} leaving ${roomName}`);
+    console.log(`${new Date()}: ${username} leaving ${roomName}`);
     const participants = getRoomSockets(roomName).map(socket => socket.username)
     console.log('emitting roomUpdated', participants)
     getRoomSockets(roomName).forEach(socket => {
@@ -91,7 +91,7 @@ io.on('connection', function (socket) {
 
   socket.on('signal', function (msg) {
     const { username, roomName } = socket as any;
-    console.log(`${username}:${socket.id} signaled in ${roomName}`)
+    console.log(`${new Date()}: ${username}:${socket.id} signaled in ${roomName}`)
     const participants = getRoomSockets(roomName).filter(roomSocket => roomSocket.id !== socket.id)
     if (participants.length === 1) {
       console.log(`Routing signal to ${participants[0].username}:${participants[0].id} in ${roomName}`);
