@@ -5,16 +5,16 @@ export const getRoomName = () => {
 }
 
 export const getDefaultUsername = () => {
-    let username = window.sessionStorage.getItem('username');
+    let username = window.localStorage.getItem('username');
     if (username === null) {
         username = `guest${Math.ceil(Math.random() * 999)}`;
-        window.sessionStorage.setItem('username', username);
+        window.localStorage.setItem('username', username);
     }
     return username;
 }
 
 export const setDefaultUsername = (username: string) => {
-    window.sessionStorage.setItem('username', username);
+    window.localStorage.setItem('username', username);
 }
 
 export const playSound = () => {
