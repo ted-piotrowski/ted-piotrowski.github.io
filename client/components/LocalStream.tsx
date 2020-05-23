@@ -26,7 +26,8 @@ const LocalStream = (props: Props) => {
             video.play()
         }
         if (audioTrack) {
-            const audioContext = new window.AudioContext();
+            const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+            const audioContext: AudioContext = new AudioContext();
             const analyzer = audioContext.createAnalyser();
             const source = audioContext.createMediaStreamSource(new MediaStream([audioTrack]));
             source.connect(analyzer);
