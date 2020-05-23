@@ -4,6 +4,7 @@ import { Color } from '../utils/styles';
 import Chat from './chat/Chat';
 import ChatButton from './chat/ChatButton';
 import { LinkContext } from './Connection';
+import ControlButton from './ControlButton';
 import MicrophoneIcon from './icons/MicrophoneIcon';
 import ScreenIcon from './icons/ScreenIcon';
 import VideoIcon from './icons/VideoIcon';
@@ -131,27 +132,27 @@ const Room = () => {
     return (
         <div style={styles.container}>
             <div style={{ position: 'relative', flexGrow: 1 }}>
-                <LocalStream videoTrack={videoTrack} audioTrack={audioTrack} />
                 <RemoteStream />
+                <LocalStream videoTrack={videoTrack} audioTrack={audioTrack} />
             </div>
             <div>
                 <Chat />
             </div>
             <div style={styles.leftSidebar}>
                 <div>
-                    <button style={styles.button} onClick={toggleAudio}>
+                    <ControlButton onClick={toggleAudio}>
                         <MicrophoneIcon color={audio ? Color.RED : Color.BLUE1} />
-                    </button>
+                    </ControlButton>
                 </div>
                 <div>
-                    <button style={styles.button} onClick={toggleVideo}>
+                    <ControlButton onClick={toggleVideo}>
                         <VideoIcon color={video ? Color.RED : Color.BLUE1} />
-                    </button>
+                    </ControlButton>
                 </div>
                 <div>
-                    <button style={styles.button} onClick={toggleScreen}>
+                    <ControlButton onClick={toggleScreen}>
                         <ScreenIcon color={screen ? Color.RED : Color.BLUE1} />
-                    </button>
+                    </ControlButton>
                 </div>
                 <div>
                     <ChatButton />
@@ -176,15 +177,6 @@ const styles = {
         top: 0,
         left: 0,
     },
-    button: {
-        width: 80,
-        height: 80,
-        background: 'transparent',
-        padding: 20,
-        border: 'none',
-        backgroundColor: Color.BLUE2,
-        boxShadow: `0 1px 5px ${Color.BLUE2}`
-    }
 }
 
 export default Room;

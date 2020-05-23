@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { addResponseMessage, toggleMsgLoader, Widget } from 'react-chat-widget';
+import { addResponseMessage, deleteMessages, toggleMsgLoader, Widget } from 'react-chat-widget';
 import '../../css/chat.css';
 import { DataType } from '../../types/chat';
 import { playSound } from '../../utils/helpers';
@@ -42,8 +42,10 @@ const Chat = () => {
         if (link) {
             (document.querySelector('.rcw-send') as HTMLButtonElement).disabled = false;
             link.on('data', onData)
-            addResponseMessage(`Connected! Type here to send me a message...`);
+            deleteMessages(1, 'welcome');
+            addResponseMessage(`🥳 Someone joined! Send them a message...`);
         } else {
+            addResponseMessage(`👋 Invite someone to join you by sending them this url: \`${window.location.href}\``, 'welcome');
             (document.querySelector('.rcw-send') as HTMLButtonElement).disabled = true;
         }
         return () => {
@@ -65,7 +67,7 @@ const Chat = () => {
         }
     }
 
-    const title = room.length === 2 ? `Chat with ${room[1]}` : 'Waiting for someone to join...'
+    const title = room.length === 2 ? `Chat with ${room[1]}` : 'Chat'
     return (
         <Widget
             handleNewUserMessage={handleNewUserMessage}

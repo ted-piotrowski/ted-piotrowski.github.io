@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { DataType } from '../types/chat';
+import { Color } from '../utils/styles';
 import { LinkContext, RoomContext } from './Connection';
 
 const RemoteStream = () => {
@@ -55,10 +56,15 @@ const RemoteStream = () => {
     }, [link]);
 
     return (
-        <React.Fragment>
+        <div style={{ position: 'relative' }}>
+            <div style={{ color: Color.BLUE4, fontSize: 36, position: 'relative', display: 'flex', left: 0, right: 0, height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
+                <div>
+                    {(room[1]) ? `Connected with ${room[1]}` : 'Waiting for someone to join...'}
+                </div>
+            </div>
             <audio ref={audioRef} />
             <video style={styles.video} ref={videoRef} />
-        </React.Fragment>
+        </div>
     );
 }
 
@@ -77,6 +83,9 @@ const styles = {
     video: {
         width: '100%',
         height: '100%',
+        position: 'absolute' as 'absolute',
+        top: 0,
+        right: 0,
     }
 }
 

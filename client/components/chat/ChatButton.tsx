@@ -3,6 +3,7 @@ import { isWidgetOpened, toggleWidget } from 'react-chat-widget';
 import { DataType } from '../../types/chat';
 import { Color } from '../../utils/styles';
 import { LinkContext } from '../Connection';
+import ControlButton from '../ControlButton';
 import ChatIcon from '../icons/ChatIcon';
 
 const ChatButton = () => {
@@ -39,11 +40,10 @@ const ChatButton = () => {
     }
 
     return (
-
-        <button style={styles.button} onClick={toggleChat}>
+        <ControlButton onClick={toggleChat}>
             {unread > 0 && <div style={styles.unread}>{unread}</div>}
             <ChatIcon color={chat ? Color.RED : Color.BLUE1} />
-        </button>
+        </ControlButton>
     )
 }
 
