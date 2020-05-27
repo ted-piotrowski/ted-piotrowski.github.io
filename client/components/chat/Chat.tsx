@@ -1,3 +1,4 @@
+import isUrl from 'is-url';
 import React, { useContext, useEffect, useState } from 'react';
 import { addResponseMessage, deleteMessages, toggleMsgLoader, Widget } from 'react-chat-widget';
 import '../../css/chat.css';
@@ -25,10 +26,9 @@ const Chat = () => {
                     }
                 } else if (data.type === DataType.TYPING_IN_CHAT) {
                     if (!typing) {
-                        console.log('toggle msg load')
                         toggleMsgLoader();
+                        typing = true;
                     }
-                    typing = true;
                     window.clearTimeout(timeout);
                     timeout = window.setTimeout(() => {
                         if (typing) {
@@ -57,7 +57,13 @@ const Chat = () => {
 
     const handleNewUserMessage = (message: string) => {
         if (link) {
-            link.send(JSON.stringify({ type: DataType.CHAT, payload: message }));
+            if (isUrl(message)) {
+                link.send(JSON.stringify({ type: DataType.CHAT, payload: `[${message}](${message})` }));
+            } else if (isUrl(`http://${message}`)) {
+                link.send(JSON.stringify({ type: DataType.CHAT, payload: `[${message}](http://${message})` }));
+            } else {
+                link.send(JSON.stringify({ type: DataType.CHAT, payload: message }));
+            }
         }
     }
 
