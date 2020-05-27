@@ -23,17 +23,17 @@ const Welcome = () => {
     const updateUsername = (e: ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
         setDefaultUsername(e.target.value);
-        socket.emit('enter', getRoomName(), e.target.value);
     }
 
     const keyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.keyCode === 13 && username !== '') {
-            setFinished(true);
+            updateFinished();
         }
     }
 
     const updateFinished = () => {
         setFinished(true);
+        socket.emit('enter', getRoomName(), username);
     }
 
     if (finished) {
