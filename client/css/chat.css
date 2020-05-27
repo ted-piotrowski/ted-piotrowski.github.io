@@ -26,6 +26,10 @@
     vertical-align: middle
 }
 
+.rcw-conversation-container a, .rcw-conversation-container a:active, .rcw-conversation-container a:hover, .rcw-conversation-container a:visited {
+    color: #dee7e6;
+}
+
 .rcw-full-screen .rcw-close-button {
     background-color: #e23046;
     border: 0;

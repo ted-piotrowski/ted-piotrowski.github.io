@@ -52,7 +52,8 @@ const Connection = () => {
                 } catch (e) { }
             }
             // convention is for local user to always come first
-            setUsers([me, ...users.filter(user => user !== me)]);
+            const justMe = users.splice(users.indexOf(me), 1);
+            setUsers([...justMe, ...users]);
         });
 
         socket.on('initialize', () => {

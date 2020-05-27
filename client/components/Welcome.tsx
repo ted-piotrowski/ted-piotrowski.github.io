@@ -13,7 +13,10 @@ const Welcome = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            input && input.current && input.current.focus();
+            if (input && input.current) {
+                input.current.focus();
+                input.current.select();
+            }
         }, 0);
     }, [input]);
 
