@@ -7,6 +7,7 @@ const ControlButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => 
 
 const styles = {
     button: {
+        position: 'relative' as 'relative',
         width: 70,
         height: 70,
         background: 'transparent',

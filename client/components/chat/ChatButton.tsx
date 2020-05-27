@@ -50,16 +50,6 @@ const ChatButton = () => {
 const bubble = 20;
 
 const styles = {
-    button: {
-        position: 'relative' as 'relative',
-        width: 80,
-        height: 80,
-        background: 'transparent',
-        padding: 20,
-        border: 'none',
-        backgroundColor: Color.BLUE2,
-        boxShadow: `0 1px 5px ${Color.BLUE2}`
-    },
     unread: {
         position: 'absolute' as 'absolute',
         borderRadius: '100%',
