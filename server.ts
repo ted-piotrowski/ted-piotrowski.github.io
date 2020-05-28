@@ -36,6 +36,7 @@ app.get('*', function (req, res) {
 
 io.on('connection', function (socket) {
   socket.on('enter', async function (roomName, username) {
+    username = username.substring(0, 20);
     console.log(`${new Date()}: ${username} entering ${roomName} with ${socket.id} socket`);
     (socket as any).username = username;
     (socket as any).roomName = roomName;

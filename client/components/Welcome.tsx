@@ -21,8 +21,10 @@ const Welcome = () => {
     }, [input]);
 
     const updateUsername = (e: ChangeEvent<HTMLInputElement>) => {
-        setUsername(e.target.value);
-        setDefaultUsername(e.target.value);
+        if (e.target.value.length <= 20) {
+            setUsername(e.target.value);
+            setDefaultUsername(e.target.value);
+        }
     }
 
     const keyDown = (e: KeyboardEvent<HTMLInputElement>) => {
