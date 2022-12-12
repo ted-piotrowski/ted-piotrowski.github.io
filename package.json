@@ -4,7 +4,7 @@
   "description": "WebRTC moonlighting app for side gigs",
   "dependencies": {
     "compression": "^1.7.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "https": "^1.0.0",
     "is-url": "^1.2.4",
     "react": "^16.13.1",
